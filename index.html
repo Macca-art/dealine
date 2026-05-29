@@ -1,6 +1,6 @@
-Để đổi mô hình từ con cua sang con chim cánh cụt, bạn cần thay đổi đường dẫn của file 3D (.obj và .mtl) trong thẻ <a-assets> và cập nhật lại ID/tên gọi cho dễ quản lý.
+Việc mô hình 3D (nhất là định dạng .obj và .mtl) không hiển thị trong AR.js là một lỗi rất phổ biến. Nguyên nhân thường gặp nhất không nằm ở logic tọa độ GPS, mà nằm ở đường dẫn file, phiên bản thư viện cũ bị lỗi, hoặc thiếu ánh sáng khiến mô hình tối thui không nhìn thấy được.
 
-Dưới đây là đoạn mã hoàn chỉnh đã được chỉnh sửa. Tôi đã đổi tên các ID từ crab thành penguin (chim cánh cụt) và giả định thư mục chứa file của bạn là ./assets/penguin.obj và ./assets/penguin.mtl (bạn có thể tự sửa lại tên file thực tế của bạn ở dòng 15 và 16).
+Dưới đây là bản code đã được tối ưu hóa lại để tăng tỷ lệ chạy thành công, kèm theo giải pháp khắc phục.
 
 HTML
 <!DOCTYPE html>
@@ -11,7 +11,7 @@ HTML
     <title>WebAR Mô Hình Chim Cánh Cụt (GPS-based) - AR.js</title>
     
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0px; overflow: hidden;">
     
@@ -21,15 +21,20 @@ HTML
       arjs="sourceType: webcam; debugUIEnabled: false;">
       
       <a-assets>
-        <a-asset-item id="penguin-obj" src="./assets/penguin.obj"></a-asset-item>
-        <a-asset-item id="penguin-mtl" src="./assets/penguin.mtl"></a-asset-item>
+        <a-asset-item id="penguin-obj" src="assets/penguin.obj"></a-asset-item>
+        <a-asset-item id="penguin-mtl" src="assets/penguin.mtl"></a-asset-item>
       </a-assets>
       
+      <a-entity light="type: ambient; intensity: 1.5;"></a-entity>
+      <a-entity light="type: directional; intensity: 1;" position="1 4 3"></a-entity>
+
       <a-entity id="penguin-entity">
         <a-obj-model 
           src="#penguin-obj" 
           mtl="#penguin-mtl"
-          position="0 -1 -3" scale="0.05 0.05 0.05" rotation="0 0 0">
+          position="0 0 -5" 
+          scale="0.5 0.5 0.5" 
+          rotation="0 0 0">
         </a-obj-model>
       </a-entity>
       
@@ -38,6 +43,7 @@ HTML
     </a-scene>
 
     <script>
+      // Tọa độ mục tiêu của bạn
       const targetLat = 10.421209747684665;
       const targetLng = 105.64382686321106;
       const maxRadius = 100; 
@@ -62,16 +68,18 @@ HTML
         const userLng = e.detail.position.longitude;
 
         const distance = calculateDistance(userLat, userLng, targetLat, targetLng);
-        // Cập nhật selector theo ID mới của chim cánh cụt
         const penguinEntity = document.querySelector('#penguin-entity');
+
+        console.log(`Khoảng cách hiện tại: ${distance}m`);
 
         if (distance <= maxRadius) {
           if (!penguinEntity.hasAttribute('gps-entity-place')) {
-            // Khi lọt vào bán kính 100m, chim cánh cụt xuất hiện ngay tại vị trí người dùng
+            console.log("Đã vào vùng phủ sóng! Đang hiển thị chim cánh cụt.");
             penguinEntity.setAttribute('gps-entity-place', `latitude: ${userLat}; longitude: ${userLng};`);
           }
         } else {
           if (penguinEntity.hasAttribute('gps-entity-place')) {
+            console.log("Đã ra xa mục tiêu, ẩn mô hình.");
             penguinEntity.removeAttribute('gps-entity-place');
           }
         }
@@ -79,6 +87,3 @@ HTML
     </script>
   </body>
 </html>
-
-
-     

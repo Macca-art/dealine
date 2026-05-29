@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 25.04.2011 16:16:39
+# File Modified for Penguin Model
 
-newmtl 10012_crab
+newmtl penguin_material
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -12,5 +12,5 @@ newmtl 10012_crab
 	Kd 0.5882 0.5882 0.5882
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka 10012_crab_v1_Diffuse.jpg
-	map_Kd 10012_crab_v1_Diffuse.jpg
+	map_Ka penguin_Diffuse.jpg
+	map_Kd penguin_Diffuse.jpg

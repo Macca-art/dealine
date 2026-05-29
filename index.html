@@ -68,7 +68,7 @@
 
         if (distance <= maxRadius) {
           // NẾU NẰM TRONG BÁN KÍNH 100M: Kích hoạt hiển thị con cua ngay tại tọa độ hiện tại của người dùng
-                // Điều này giúp giải quyết sai số lớn của GPS, người dùng không cần tìm kiếm mệt mỏi ngoài thực địa.
+        // Điều này giúp giải quyết sai số lớn của GPS, người dùng không cần tìm kiếm mệt mỏi ngoài thực địa.
           if (!crabEntity.hasAttribute('gps-entity-place')) {
             crabEntity.setAttribute('gps-entity-place', `latitude: ${userLat}; longitude: ${userLng};`);
             console.log("Đã kích hoạt mô hình con cua trong vùng 100m!");
